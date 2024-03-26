@@ -50,7 +50,7 @@ def main():
         st.write("Please insert the Book Title (with author if possible) below or upload an image of the book cover and we'll provide you with information about the novel. Happy reading!!!")
         
         # Set Google API key
-        genai.configure(api_key="AIzaSyBIOWxD8l5vQouhPh5zc398pPu7EWgjNNs")
+        GOOGLE_API_KEY="AIzaSyBIOWxD8l5vQouhPh5zc398pPu7EWgjNNs"
 
         model = genai.GenerativeModel("gemini-pro")
 
