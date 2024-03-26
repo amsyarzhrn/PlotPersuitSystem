@@ -3,13 +3,32 @@
 import streamlit as st
 import google.generativeai as genai
 import PIL.Image
+from difflib import SequenceMatcher
+
+# Custom CSS styles 
+st.markdown(
+    """
+    <style>
+        /* CSS for the title */
+        .title-text {
+            font-size: 48px;
+            font-weight: bold;
+            color: #336699; /* Adjust color as needed */
+            text-align: center;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Add a text shadow */
+            margin-bottom: 30px; /* Adjust spacing as needed */
+        }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
 
 # Main function
 def main():
-    st.title("Plot Persuit - Unveiling Novels Before You Dive In")
+    st.markdown("<p class='title-text'>Plot Persuit - Unveiling Novels Before You Dive In</p>", unsafe_allow_html=True)
  # Sidebar for inputs
     with st.sidebar:   
-        st.write("Please insert the full Book Title (with author if possible) below or upload an image of the book cover and we'll provide you with information.")
+        st.write("Please insert the Book Title (with author if possible) below or upload an image of the book cover and we'll provide you with information about the novel. Happy reading!!!")
         
         # Set Google API key
         genai.configure(api_key="AIzaSyBIOWxD8l5vQouhPh5zc398pPu7EWgjNNs")
@@ -18,7 +37,7 @@ def main():
 
         # Accept user input
         
-        query = st.text_input("Insert Book Title Here:")
+        query = st.text_input("Insert book title and author here:")
         uploaded_file = st.file_uploader("Upload an image of the book cover", type=["jpg", "jpeg", "png"], accept_multiple_files=False)
 
 
@@ -27,12 +46,11 @@ def main():
 
     # Main area for displaying outputs
     st.markdown("---")
+
     with st.container():
         if clear_clicked:
             query = ""
             uploaded_file = None
-            st.text_input = ""
-            st.file_uploader = ""
 
 
         elif search_clicked:
@@ -43,20 +61,27 @@ def main():
             # Calling the Function when Input is Provided
             if query:
                 # Process the query and generate response
-                response = model.generate_content([f"Please list all my requirements: Give the book summary, tell who is the author and publisher, year it was published, the theme of the story in the novel, where is the setting of the story with description,what readers should expect while reading the book, list the characters with description if possible,  how many chapters and a summary of the chapters combined in only few parts, and state whether there are any series related to this novel (show where this novel is placed in the series) in the book '{query}'"])
+                response = model.generate_content([f"Please list all my requirements: Based on  '{query}', give the book summary, tell who is the author and publisher, year it was published, the genre, the theme of the story in the novel, where is the setting of the story with description, what readers should expect while reading the book, list the characters with description if possible, how many chapters and a summary of the chapters combined in only a few parts, state whether there are any series related to this novel (show where this novel is placed in the series) in the book, and 4 other book that are similar to it that best matches "])
 
-                # Display response
+                
                 st.markdown(response.text)
+                
+            
             
             elif uploaded_file is not None:
 
                 image = PIL.Image.open(uploaded_file)
 
                 vision_model = genai.GenerativeModel('gemini-pro-vision')
-                response = vision_model.generate_content([f"Please list all my requirements: Give the book summary, tell who is the author and publisher, year it was published, the theme of the story in the novel, where is the setting of the story with description,what readers should expect while reading the book, list the characters with description if possible,  how many chapters and a summary of the chapters combined in only few parts, and state whether there are any series related to this novel (show where this novel is placed in the series) in the book ", image])
+                response = vision_model.generate_content([f"Please list all my requirements: Give the book summary, tell who is the author and publisher, year it was published, ,the genre ,the theme of the story in the novel, where is the setting of the story with description,what readers should expect while reading the book, list the characters with description if possible,  how many chapters and a summary of the chapters combined in only few parts, and state whether there are any series related to this novel (show where this novel is placed in the series) in the book ", image])
 
-                # Display response
-                st.markdown(response.text)
+                # Check if the response contains the expected book title
+                if query.lower() in response.text.lower():
+                    # Display response
+                    st.markdown(response.text)
+                else:
+                    # Book not found error message
+                    st.error(f"The context you provided does not mention the book '{query}'. Therefore, I cannot extract the requested data from the provided context. Please try again with another novel.")
 
 if __name__ == "__main__":
     main()
