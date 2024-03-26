@@ -73,6 +73,7 @@ def main():
 
 
         elif search_clicked:
+          with st.spinner(" We're fetching book data, please standby...."):
             # Check if both query and uploaded_file are empty
             if not query and not uploaded_file:
                 return  # Do nothing and wait for user input
