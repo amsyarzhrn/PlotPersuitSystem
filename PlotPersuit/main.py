@@ -18,6 +18,25 @@ st.markdown(
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Add a text shadow */
             margin-bottom: 30px; /* Adjust spacing as needed */
         }
+        
+        /* CSS for clear button */
+        /* CSS for the clear button */
+        button[data-testid="clear_button"] {
+            background-color: #FF474C; /* Red color for clear button */
+            color: white; /* Text color */
+            border-radius: 5px; /* Rounded corners */
+            border: none; /* Remove border */
+            padding: 10px 20px; /* Padding */
+            margin-top: 10px; /* Adjust spacing as needed */
+            cursor: pointer; /* Cursor style */
+            transition: background-color 0.3s; /* Smooth transition */
+        }
+
+        /* Hover effect for clear button */
+        button[data-testid="clear_button"]:hover {
+            background-color: #FF6B6E; /* Lighter red on hover */
+            transform: scale(1.05); /* Increase button size on hover */
+        }
     </style>
     """,
     unsafe_allow_html=True
@@ -42,7 +61,7 @@ def main():
 
 
         search_clicked = st.button("🔍 Search")
-        clear_clicked = st.button("🗑️ Clear my search")
+        clear_clicked = st.button("🗑️ Clear my search" , key="clear_button")
 
     # Main area for displaying outputs
     st.markdown("---")
@@ -61,7 +80,7 @@ def main():
             # Calling the Function when Input is Provided
             if query:
                 # Process the query and generate response
-                response = model.generate_content([f"Please list all my requirements: Based on  '{query}', give the book summary, tell who is the author and publisher, year it was published, the genre, the theme of the story in the novel, where is the setting of the story with description, what readers should expect while reading the book, list the characters with description if possible, how many chapters and a summary of the chapters combined in only a few parts, state whether there are any series related to this novel (show where this novel is placed in the series) in the book, and 4 other book that are similar to it that best matches "])
+                response = model.generate_content([f"Please list all my requirements: Based on  '{query}', give the book summary, tell who is the author and publisher, year it was published, the genre, the theme of the story in the novel, where is the setting of the story with description, what readers should expect while reading the book, list the characters with description of it if possible, how many chapters and a summary of the chapters combined in only a few parts, state whether there are any series related to this novel (show where this novel is placed in the series) in the book, and 4 other book that are similar to it based on genre and theme "])
 
                 
                 st.markdown(response.text)
@@ -73,7 +92,7 @@ def main():
                 image = PIL.Image.open(uploaded_file)
 
                 vision_model = genai.GenerativeModel('gemini-pro-vision')
-                response = vision_model.generate_content([f"Please list all my requirements: Give the book summary, tell who is the author and publisher, year it was published, ,the genre ,the theme of the story in the novel, where is the setting of the story with description,what readers should expect while reading the book, list the characters with description if possible,  how many chapters and a summary of the chapters combined in only few parts, and state whether there are any series related to this novel (show where this novel is placed in the series) in the book ", image])
+                response = vision_model.generate_content([f"Please list all my requirements: Based on  '{image}', give the book summary, tell who is the author and publisher, year it was published, the genre, the theme of the story in the novel, where is the setting of the story with description, what readers should expect while reading the book, list the characters with description of it if possible, how many chapters and a summary of the chapters combined in only a few parts, state whether there are any series related to this novel (show where this novel is placed in the series) in the book, and 4 other book that are similar to it based on genre and theme ", image])
 
                 # Check if the response contains the expected book title
                 if query.lower() in response.text.lower():
