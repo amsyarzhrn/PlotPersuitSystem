@@ -93,6 +93,9 @@ def main():
                 ### Genre and Theme:
                 Identify the genre and theme of the story in the novel.
 
+                ## Main Conflict 
+                Identify the main conflict of the story and brief description
+
                 ### Setting of the Story:
                 Describe where the story is set and provide a brief description of the setting.
 
@@ -138,6 +141,9 @@ def main():
 
                 ### Genre and Theme:
                 Identify the genre and theme of the story in the novel. Describe a bit.
+
+                ## Main Conflict 
+                Identify the main conflict of the story and brief description
 
                 ### Setting of the Story:
                 Describe where the story is set and provide a brief description of the setting.
