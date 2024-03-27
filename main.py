@@ -134,6 +134,9 @@ def main():
                 prompt = f"""
                 ### **Please list all my requirements based on the image provided:**
 
+                ### Book Name:
+                What is the book name recognised based on the image
+                
                 ### Book Summary:
                 Based on the image, provide a summary of the book.
 
