@@ -84,6 +84,7 @@ def main():
             if query:
                 # Process the query and generate response
                 prompt = f"""
+                
                 ### Book Summary:
                 Based on '{query}', provide a summary of the book.
 
