@@ -16,7 +16,7 @@ st.markdown(
             color: #336699; /* Adjust color as needed */
             text-align: center;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Add a text shadow */
-            margin-bottom: 30px; /* Adjust spacing as needed */
+            margin-bottom: 15px; /* Adjust spacing as needed */
         }
         
         /* CSS for clear button */
