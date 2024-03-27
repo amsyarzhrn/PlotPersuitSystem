@@ -37,6 +37,8 @@ st.markdown(
             background-color: #FF6B6E; /* Lighter red on hover */
             transform: scale(1.05); /* Increase button size on hover */
         }
+
+        
     </style>
     """,
     unsafe_allow_html=True
@@ -73,6 +75,7 @@ def main():
 
 
         elif search_clicked:
+          with st.spinner(" We're fetching book data, please standby...."):
             # Check if both query and uploaded_file are empty
             if not query and not uploaded_file:
                 return  # Do nothing and wait for user input
@@ -80,7 +83,38 @@ def main():
             # Calling the Function when Input is Provided
             if query:
                 # Process the query and generate response
-                response = model.generate_content([f"Please list all my requirements: Based on  '{query}', give the book summary, tell who is the author and publisher, year it was published, the genre, the theme of the story in the novel, where is the setting of the story with description, what readers should expect while reading the book, list the characters with description of it if possible, how many chapters and a summary of the chapters combined in only a few parts, state whether there are any series related to this novel (show where this novel is placed in the series) in the book, and 4 other book that are similar to it based on genre and theme "])
+                prompt = f"""
+                ### Book Summary:
+                Based on '{query}', provide a summary of the book.
+
+                ### Author and Publisher:
+                Who is the author and what is the publisher of the book? Also, provide the year it was published.
+
+                ### Genre and Theme:
+                Identify the genre and theme of the story in the novel.
+
+                ### Setting of the Story:
+                Describe where the story is set and provide a brief description of the setting.
+
+                ### Expectations for Readers:
+                What should readers expect while reading the book?
+
+                ### Characters:
+                List the characters and provide a description if possible.
+
+                ### Chapters:
+                How many chapters does the book have? Provide a summary of the chapters combined in only a few parts.
+
+                ### Series Information:
+                Is this novel part of a series? If so, where does it fit in the series?
+
+                ### Similar Books:
+                Recommend four other books that are similar to '{query}' based on genre and theme.
+                """
+
+
+
+                response = model.generate_content([prompt])
 
                 
                 st.markdown(response.text)
@@ -92,7 +126,40 @@ def main():
                 image = PIL.Image.open(uploaded_file)
 
                 vision_model = genai.GenerativeModel('gemini-pro-vision')
-                response = vision_model.generate_content([f"Please list all my requirements: Based on  '{image}', give the book summary, tell who is the author and publisher, year it was published, the genre, the theme of the story in the novel, where is the setting of the story with description, what readers should expect while reading the book, list the characters with description of it if possible, how many chapters and a summary of the chapters combined in only a few parts, state whether there are any series related to this novel (show where this novel is placed in the series) in the book, and 4 other book that are similar to it based on genre and theme ", image])
+
+                prompt = f"""
+                ### **Please list all my requirements based on the image provided:**
+
+                ### Book Summary:
+                Based on the image, provide a summary of the book.
+
+                ### Author and Publisher:
+                Who is the author and what is the publisher of the book? Also, provide the year it was published. Make bullet point.
+
+                ### Genre and Theme:
+                Identify the genre and theme of the story in the novel. Describe a bit.
+
+                ### Setting of the Story:
+                Describe where the story is set and provide a brief description of the setting.
+
+                ### Expectations for Readers:
+                What should readers expect while reading the book?
+
+                ### Characters:
+                List the characters and provide a description if possible. make bullet point for all characters available
+
+                ### Chapters:
+                How many chapters does the book have? Provide a summary of the chapters combined in only a few parts.
+
+                ### Series Information:
+                Is this novel part of a series? If so, where does it fit in the series? Make list of series it related to. 
+
+                ### Similar Books:
+                Recommend four other books that are similar to the one depicted in the image based on genre and theme. Make bullet points
+                """
+
+                # Generate content using the prompt and the image
+                response = vision_model.generate_content([prompt, image])
 
                 # Check if the response contains the expected book title
                 if query.lower() in response.text.lower():
